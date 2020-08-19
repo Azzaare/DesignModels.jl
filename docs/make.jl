@@ -17,5 +17,5 @@ makedocs(;
 )
 
 deploydocs(;
-    repo="github.com/azzaare/DesignModels.jl",
+    repo="github.com/azzaare/DesignModels.jl.git",
 )
