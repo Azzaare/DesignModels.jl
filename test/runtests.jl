@@ -7,5 +7,5 @@ import DesignModels.Design, DesignModels.Facet
     design = Design()
     facet = Facet()
     # println(convert_design("../examples/ascii.stl"; compact=false))
-    convert_design("../examples/ascii.stl"; compact=false, file = "../examples/ascii.json")
+    convert_design("../examples/ascii.stl"; file = "../examples/ascii.json")
 end
