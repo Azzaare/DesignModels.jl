@@ -4,8 +4,7 @@ const stl_machine = (
     object      = re"OBJECT"
     space       = re"[\t\n\r ]"
     oct         = re"0o[0-7]+"
-    dec         = re"[-+]?[0-9]+
-    
+    dec         = re"[-+]?[0-9]+"
     hex         = re"0x[0-9A-Fa-f]+"
     prefloat    = re"[-+]?([0-9]+\.[0-9]*|[0-9]*\.[0-9]+)"
 
