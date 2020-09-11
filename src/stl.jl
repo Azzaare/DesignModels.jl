@@ -1,7 +1,7 @@
 const stl_machine = (
     function () # Grammar
     # Basic regexp
-    object      = re"OBJECT"
+    object      = re"[A-Za-z][0-9A-Za-z_\-]*"
     space       = re"[\t\n\r ]"
     oct         = re"0o[0-7]+"
     dec         = re"[-+]?[0-9]+"
@@ -26,6 +26,8 @@ const stl_machine = (
     normal.actions[:exit]   = [:new_facet]
     number.actions[:enter]  = [:mark]
     number.actions[:exit]   = [:store_coord]
+    object.actions[:enter]  = [:mark]
+    object.actions[:exit]   = [:store_name]
     solid.actions[:exit]    = [:add_solid]
     vertex.actions[:exit]   = [:add_vertex]
 
@@ -34,7 +36,7 @@ end
 )()
 
 const stl_actions = Dict(
-    :add_facet      => :(add_facet!(design, facet)),
+    :add_facet      => :(push!(facets, facet)),
     :add_solid      => :(), # TODO: handle several objects
     :add_vertex     => :(add_vertex!(facet, coord)),
     :init_coord     => :(coord = Vector{Float64}()),
@@ -42,15 +44,17 @@ const stl_actions = Dict(
     :mark           => :(mark = p),
     :new_facet      => :(facet = Facet(coord)),
     :store_coord    => :(push!(coord, round(parse(Float64, data[mark:p - 1]); digits=3))),
+    :store_name     => :(name = data[mark:p-1]),
 )
 
 const stl_context = Automa.CodeGenContext()
 
 @eval function parse_stl(data::String)
-    # Variables to store data    
+    # Variables to store data
+    name = ""
     coord = Vector{Float64}()
     facet = Facet()
-    design = Design()
+    facets = Vector{Facet}()
 
     # Marks
     mark = 0
@@ -64,6 +68,8 @@ const stl_context = Automa.CodeGenContext()
     # generate code to execute FSM
     $(Automa.generate_exec_code(stl_context, stl_machine, stl_actions))
     
+    design = Design(name, facets)
+
     # check if FSM properly finished and returm the state of the FSM
     return design, cs == 0 ? :ok : cs < 0 ? :error : :incomplete
 end

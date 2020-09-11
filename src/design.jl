@@ -28,10 +28,11 @@ function add_vertex!(facet::Facet, vertex::Vector{Float64})
 end
 
 struct Design
+    name::String
     facets::Vector{Facet}
 end
-function Design()
-    Design(Vector{Facet}())
+function Design(name::String = "OBJECT")
+    Design(name, Vector{Facet}())
 end
 
 function add_facet!(design::Design, facet::Facet)

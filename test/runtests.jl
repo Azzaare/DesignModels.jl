@@ -7,5 +7,13 @@ import DesignModels.Design, DesignModels.Facet
     design = Design()
     facet = Facet()
     # println(convert_design("../examples/ascii.stl"; compact=false))
-    convert_design("../examples/ascii.stl"; file = "../examples/ascii.json")
+    for f in [
+        "ascii",
+        "primitive closed box",
+        "primitive floor",
+        "primitive open box"
+        ]
+        convert_design("../examples/$f.stl"; file = "../examples/$f.json")
+    end
+
 end
